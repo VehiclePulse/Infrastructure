@@ -1,0 +1,27 @@
+services:
+  mongodb:
+    image: mongo:7.0.14
+    container_name: mongodb
+    restart: unless-stopped
+
+    ports:
+      - "27017:27017"
+
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin_password
+
+    volumes:
+      - mongodb_data:/data/db
+      - ./init-db.js:/docker-entrypoint-initdb.d/init-db.js:ro
+
+    networks:
+      - vehicle-pulse-network
+
+
+volumes:
+  mongodb_data:
+
+networks:
+  vehicle-pulse-network:
+    external: true

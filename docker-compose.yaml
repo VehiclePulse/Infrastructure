@@ -1,0 +1,6 @@
+version: '3.8'
+
+networks:
+  vehicle-pulse-network:
+    name: vehicle-pulse-network
+    driver: bridge

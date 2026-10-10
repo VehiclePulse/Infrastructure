@@ -52,7 +52,7 @@ services:
     volumes:
       - kafka-data-1:/var/lib/kafka/data
     networks:
-      - kafka-network
+      - vehicle-pulse-network
     mem_limit: 1200m
     healthcheck:
       test:
@@ -118,7 +118,7 @@ services:
     volumes:
       - kafka-data-2:/var/lib/kafka/data
     networks:
-      - kafka-network
+      - vehicle-pulse-network
     mem_limit: 1200m
     healthcheck:
       test:
@@ -184,7 +184,7 @@ services:
     volumes:
       - kafka-data-3:/var/lib/kafka/data
     networks:
-      - kafka-network
+      - vehicle-pulse-network
     mem_limit: 1200m
     healthcheck:
       test:
@@ -218,11 +218,12 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka-1:29092,kafka-2:29092,kafka-3:29092
     networks:
-      - kafka-network
+      - vehicle-pulse-network
 
 networks:
-  kafka-network:
-    driver: bridge
+  vehicle-pulse-network:
+    external: true
+    #driver: bridge
 
 volumes:
   kafka-data-1:
