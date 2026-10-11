@@ -220,6 +220,37 @@ services:
     networks:
       - vehicle-pulse-network
 
+  kafka-topics:
+    image: ${KAFKA_IMAGE}
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+      - |
+        for i in $$(seq 1 60); do
+          if /opt/kafka/bin/kafka-topics.sh \
+            --bootstrap-server kafka-1:29092,kafka-2:29092,kafka-3:29092 \
+            --create \
+            --if-not-exists \
+            --topic telemetry \
+            --partitions 6 \
+            --replication-factor 3; then
+            echo "Topic telemetry is ready."
+            exit 0
+          fi
+          sleep 5
+        done
+        echo "Failed to create telemetry topic."
+        exit 1
+    depends_on:
+      kafka-1:
+        condition: service_started
+      kafka-2:
+        condition: service_started
+      kafka-3:
+        condition: service_started
+    networks:
+      - vehicle-pulse-network
+    restart: "no"
+
 networks:
   vehicle-pulse-network:
     external: true
