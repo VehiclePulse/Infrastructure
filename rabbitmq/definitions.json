@@ -1,0 +1,111 @@
+{
+  "vhosts": [
+    {
+      "name": "/"
+    }
+  ],
+  "exchanges": [
+    {
+      "name": "vehicle.management",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    },
+    {
+      "name": "vehicle.management.dlx",
+      "vhost": "/",
+      "type": "direct",
+      "durable": true,
+      "auto_delete": false,
+      "internal": false,
+      "arguments": {}
+    }
+  ],
+  "queues": [
+    {
+      "name": "vehicle.management",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    },
+    {
+      "name": "vehicle.management.dlq",
+      "vhost": "/",
+      "durable": true,
+      "auto_delete": false,
+      "arguments": {
+        "x-queue-type": "quorum"
+      }
+    }
+  ],
+  "bindings": [
+    {
+      "source": "vehicle.management",
+      "vhost": "/",
+      "destination": "vehicle.management",
+      "destination_type": "queue",
+      "routing_key": "vehicle.started",
+      "arguments": {}
+    },
+    {
+      "source": "vehicle.management",
+      "vhost": "/",
+      "destination": "vehicle.management",
+      "destination_type": "queue",
+      "routing_key": "vehicle.stopped",
+      "arguments": {}
+    },
+    {
+      "source": "vehicle.management.dlx",
+      "vhost": "/",
+      "destination": "vehicle.management.dlq",
+      "destination_type": "queue",
+      "routing_key": "vehicle.management.dlq",
+      "arguments": {}
+    }
+  ],
+  "policies": [
+    {
+      "vhost": "/",
+      "name": "vehicle-management-policy",
+      "pattern": "^vehicle\\.management$",
+      "apply-to": "quorum_queues",
+      "priority": 10,
+      "definition": {
+        "message-ttl": 86400000,
+        "dead-letter-exchange": "vehicle.management.dlx",
+        "dead-letter-routing-key": "vehicle.management.dlq",
+        "delivery-limit": 4,
+        "overflow": "reject-publish",
+        "max-length": 100000,
+        "dead-letter-strategy": "at-least-once",
+        "delayed-retry-type": "failed",
+        "delayed-retry-min": 5000,
+        "delayed-retry-max": 60000
+      }
+    },
+    {
+      "vhost": "/",
+      "name": "vehicle-management-dlq-policy",
+      "pattern": "^vehicle\\.management\\.dlq$",
+      "apply-to": "quorum_queues",
+      "priority": 10,
+      "definition": {
+        "message-ttl": 172800000,
+        "max-length": 100000,
+        "overflow": "reject-publish"
+      }
+    }
+  ],
+  "parameters": [],
+  "users": [],
+  "permissions": [],
+  "topic_permissions": [],
+  "global_parameters": []
+}
