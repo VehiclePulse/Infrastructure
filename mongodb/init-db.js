@@ -34,32 +34,8 @@ db.createCollection('vehicles', {
                     "description": "Must be between 1900 and current year"
                 },
                 "simulation": {
-                    "bsonType": "object",
-                    "required": ["enabled", "initial_latitude", "initial_longitude", "initial_heading"],
-                    "properties": {
-                        "enabled": { 
-                            "bsonType": "bool",
-                            "description": "Must be a true/false boolean value"
-                        },
-                        "initial_latitude": { 
-                            "bsonType": "double",
-                            "minimum": -90.0,
-                            "maximum": 90.0,
-                            "description": "Must be a high-precision float (Double) representing latitude"
-                        },
-                        "initial_longitude": { 
-                            "bsonType": "double",
-                            "minimum": -180.0,
-                            "maximum": 180.0,
-                            "description": "Must be a high-precision float (Double) representing longitude"
-                        },
-                        "initial_heading": { 
-                            "bsonType": "double",
-                            "minimum": 0.0,
-                            "maximum": 360.0,
-                            "description": "Must be a float (Double) compass heading between 0 and 360 degrees"
-                        }
-                    }
+                    "bsonType": "bool",
+                    "description": "Must be either true or false"
                 }
             }
         }
